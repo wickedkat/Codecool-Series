@@ -30,7 +30,7 @@ def get_show_entity(show):
 def get_genre_ids(genre_list):
     genres = tuple((g.title() for g in genre_list))
     id_result = execute_select("SELECT id FROM genres WHERE name IN %s;", (genres,))
-    genre_ids = [result[0] for result in id_result]
+    genre_ids = [result['id'] for result in id_result]
     return genre_ids
 
 
@@ -100,7 +100,7 @@ def get_season_id(show_id, season_number):
         'season_number': season_number
     }
     result = execute_select(stmt, params)
-    return result[0][0]
+    return result[0]['id']
 
 
 def insert_episodes(show_id):
