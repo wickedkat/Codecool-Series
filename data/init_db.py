@@ -9,8 +9,8 @@ def init_db():
     with establish_connection(connection_data=init_conn) as conn:
         with conn.cursor() as cursor:
             try:
-                drop_statement = "DROP DATABASE IF EXISTS {};".format(db_name)
-                create_statement = "CREATE DATABASE {};".format(db_name)
+                drop_statement = 'DROP DATABASE IF EXISTS "{}";'.format(db_name)
+                create_statement = 'CREATE DATABASE "{}";'.format(db_name)
                 cursor.execute(drop_statement)
                 cursor.execute(create_statement)
                 print("Database created.")
