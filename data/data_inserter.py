@@ -37,7 +37,7 @@ def progress_bar(count, total, prefix='', suffix=''):
     sys.stdout.write(
         ' {prefix} ▐{bar}▌ {percents: >5}% ({count: >{counter_length}}/{total}) {spinner} {suffix}\r'.format(
             prefix=prefix,
-            bar='❚' * filled_len + '▪' * (bar_length - filled_len),
+            bar='◼' * filled_len + '◻' * (bar_length - filled_len),
             percents=round(100.0 * count / float(total), 1),
             count=count,
             total=total,
@@ -89,10 +89,13 @@ def get_season_entity(season, show_id):
         'season_number': season['number'],
         'title': season['title'],
         'overview': season['overview'],
-        'episodes': season['episodes'],
+        'episodes': [],
         'episode_count': season['episode_count'],
         'show_id': show_id
     }
+    if 'episodes' in season:
+        season_entity['episodes'] = season['episodes']
+
     return season_entity
 
 
@@ -174,12 +177,52 @@ def insert_shows(limit=20, max_show_count=1000):
             #    print('Show (' + show['title'] + ') already exists...')
 
             insert_seasons(show['id'])
+            insert_cast(show['id'])
 
             progress_bar(total_counter + 1, max_show_count, prefix='Inserting shows:', suffix=show['title'])
             total_counter += 1
 
     clear_progress_bar('Inserted ' + str(len(inserted_ids)) + ' shows')
     return inserted_ids
+
+
+def insert_actor(show_id, actor):
+    actor_id = actor['person']['ids']['trakt']
+    existing_actor = execute_select("SELECT id FROM actors WHERE id=%(actor_id)s", {'actor_id': actor_id})
+
+    if len(existing_actor) == 0:
+        execute_dml_statement("""
+            INSERT INTO actors (id, name, birthday, death, biography)
+            VALUES (%(id)s, %(name)s, %(birthday)s, %(death)s, %(biography)s);
+        """, {
+            "id": actor_id,
+            "name": actor['person']['name'],
+            "birthday": actor['person']['birthday'],
+            "death": actor['person']['death'],
+            "biography": actor['person']['biography']
+        })
+
+    execute_dml_statement("""
+        INSERT INTO show_characters (show_id, actor_id, character_name)
+        VALUES (%(show_id)s, %(actor_id)s, %(character_name)s)
+    """, {
+        'show_id': show_id,
+        'actor_id': actor_id,
+        'character_name': actor['character']
+    })
+
+
+def insert_cast(show_id):
+    url = "{api_url}/shows/{show_id}/people?extended=full".format(
+        api_url=TRAKT_API_URL,
+        show_id=show_id
+    )
+
+    result_set = requests.get(url, headers=headers).json()
+
+    if 'cast' in result_set:
+        for actor in result_set['cast']:
+            insert_actor(show_id, actor)
 
 
 def insert_episodes(season):
@@ -246,7 +289,7 @@ def main():
     init_db()
     create_schema()
     insert_genres()
-    insert_shows(limit=20, max_show_count=10)
+    insert_shows(limit=20, max_show_count=100)
     # print('Season data inserted')
 
 

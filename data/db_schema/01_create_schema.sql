@@ -26,20 +26,20 @@ CREATE TABLE genres (
 
 
 CREATE TABLE actors (
-    id        SERIAL PRIMARY KEY NOT NULL,
-    name      VARCHAR(200)       NOT NULL,
-    birthday  DATE               NOT NULL,
+    id        INTEGER PRIMARY KEY NOT NULL,
+    name      VARCHAR(200)        NOT NULL,
+    birthday  DATE,
     death     DATE,
     biography TEXT
 );
 
 
 CREATE TABLE seasons (
-    id            SERIAL PRIMARY KEY NOT NULL,
-    season_number SMALLINT           NOT NULL,
+    id            INTEGER PRIMARY KEY NOT NULL,
+    season_number SMALLINT            NOT NULL,
     title         VARCHAR(200),
     overview      TEXT,
-    show_id       INTEGER            NOT NULL
+    show_id       INTEGER             NOT NULL
 );
 
 
@@ -59,11 +59,11 @@ CREATE TABLE show_characters (
 
 
 CREATE TABLE episodes (
-    id             SERIAL PRIMARY KEY NOT NULL,
+    id             INTEGER PRIMARY KEY NOT NULL,
     title          VARCHAR(200),
-    episode_number SMALLINT           NOT NULL,
+    episode_number SMALLINT            NOT NULL,
     overview       TEXT,
-    season_id      INTEGER            NOT NULL
+    season_id      INTEGER             NOT NULL
 );
 
 
