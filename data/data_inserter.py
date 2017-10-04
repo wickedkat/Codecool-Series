@@ -1,8 +1,56 @@
 import requests
-from data_manager import *
-from init_db import *
+from data_manager import execute_select, execute_dml_statement
+from init_db import init_db, create_schema
+from psycopg2 import DataError
 import datetime
 import os
+import sys
+
+
+def get_terminal_width():
+    try:
+        return int(os.get_terminal_size(0)[0])
+    except OSError:
+        return 80
+
+
+def trim_string(text, length, align_right=True):
+    if len(text) > length:
+        return '{0: <{length}}'.format(text[:(length - 2)] + '..', length=length)
+    else:
+        return text.rjust(length) if align_right else text.ljust(length)
+
+
+# original: https://stackoverflow.com/a/27871113/2205458
+def progress_bar(count, total, prefix='', suffix=''):
+    max_prefix_length = 18
+    max_suffix_length = 18
+    terminal_width = get_terminal_width()
+    prefix = trim_string(prefix, max_prefix_length)
+    suffix = trim_string(suffix, max_suffix_length, False)
+    bar_length = terminal_width - 18 - max_prefix_length - max_suffix_length - (len(str(total)) * 2)
+    filled_len = int(round(bar_length * count / float(total)))
+
+    # changes shape in every 0.33 sec
+    spinner = ['⋮', '⋯', '⋰', '⋱'][int(float(datetime.datetime.utcnow().strftime("%s.%f")) * 3) % 4]
+
+    sys.stdout.write(
+        ' {prefix} ▐{bar}▌ {percents: >5}% ({count: >{counter_length}}/{total}) {spinner} {suffix}\r'.format(
+            prefix=prefix,
+            bar='❚' * filled_len + '▪' * (bar_length - filled_len),
+            percents=round(100.0 * count / float(total), 1),
+            count=count,
+            total=total,
+            spinner=spinner,
+            counter_length=len(str(total)),
+            suffix=suffix
+        ))
+    sys.stdout.flush()
+
+
+def clear_progress_bar(text=''):
+    print(text + ' ' * (get_terminal_width() - len(text)))
+
 
 headers = {
     'Content-Type': 'application/json',
@@ -10,21 +58,52 @@ headers = {
     'trakt-api-key': os.environ.get('TRAKT_API_KEY')
 }
 
-trakt_api_url = 'https://api.trakt.tv'
+TRAKT_API_URL = 'https://api.trakt.tv'
+TRAKT_MAX_LIMIT = 20
+TRAKT_MAX_SHOW_COUNT = 52500
+TRAKT_EXPECTED_GENRE_COUNT = 33
 
 
 def get_show_entity(show):
     show_entity = {
-        'id': show['ids']['imdb'],
+        'id': show['ids']['trakt'],
         'title': show['title'],
-        'year': datetime.date(show['year'], 1, 1),
+        'year': None,
         'overview': show['overview'],
         'runtime': show['runtime'],
         'trailer': show['trailer'],
         'homepage': show['homepage'],
+        'genres': show['genres'],
         'rating': show['rating']
     }
+    try:
+        show_entity['year'] = datetime.date(show['year'], 1, 1)
+    except TypeError:
+        pass
     return show_entity
+
+
+def get_season_entity(season, show_id):
+    season_entity = {
+        'id': season['ids']['trakt'],
+        'season_number': season['number'],
+        'title': season['title'],
+        'overview': season['overview'],
+        'episodes': season['episodes'],
+        'episode_count': season['episode_count'],
+        'show_id': show_id
+    }
+    return season_entity
+
+
+def get_episode_entity(season_id, episode):
+    return {
+        'id': episode['ids']['trakt'],
+        'title': episode['title'],
+        'episode_number': episode['number'],
+        'overview': episode['overview'],
+        'season_id': season_id
+    }
 
 
 def get_genre_ids(genre_list):
@@ -36,133 +115,140 @@ def get_genre_ids(genre_list):
 
 def insert_show_genres(genre_ids, show_entity):
     for genre_id in genre_ids:
-        show_genre_statement = """INSERT INTO show_genres (show_id, genre_id) VALUES (%(show_id)s, %(genre_id)s);"""
-        show_genre_param = {
+        execute_dml_statement("""
+            INSERT INTO show_genres (show_id, genre_id)
+            VALUES (%(show_id)s, %(genre_id)s); """, {
             'show_id': show_entity['id'],
             'genre_id': genre_id
-        }
-        execute_dml_statement(show_genre_statement, show_genre_param)
+        })
 
 
-def insert_shows(limit=20):
-    url = trakt_api_url + '/shows/popular?limit={limit}&extended=full'.format(limit=limit)
-    shows_request = requests.get(url, headers=headers)
+def insert_shows(limit=20, max_show_count=1000):
+    if limit < 1:
+        limit = 1
+    if limit > TRAKT_MAX_LIMIT:
+        limit = TRAKT_MAX_LIMIT
+    if max_show_count > TRAKT_MAX_SHOW_COUNT:
+        max_show_count = TRAKT_MAX_SHOW_COUNT
+
     inserted_ids = []
+    result_page = 1
+    total_counter = 0
+    while total_counter < max_show_count:
+        url = "{api_url}/shows/popular?limit={limit}&page={page}&extended=full".format(
+            api_url=TRAKT_API_URL,
+            limit=limit,
+            page=result_page
+        )
+        result_page += 1
+        result_set = requests.get(url, headers=headers)
+        if result_set == '[]':
+            break
 
-    for show in shows_request.json():
-        show_entity = get_show_entity(show)
-        inserted_ids.append(show_entity['id'])
+        for show_raw in result_set.json():
+            # If max_show_count is not dividable by the limit, we have to jump out before processing all received shows
+            if total_counter >= max_show_count:
+                break
 
-        statement = """INSERT INTO shows (id,
-                                        title,
-                                        year,
-                                        overview,
-                                        runtime,
-                                        trailer,
-                                        homepage,
-                                        rating)
-                                VALUES (%(id)s,
-                                        %(title)s,
-                                        %(year)s,
-                                        %(overview)s,
-                                        %(runtime)s,
-                                        %(trailer)s,
-                                        %(homepage)s,
-                                        %(rating)s);"""
-        execute_dml_statement(statement, show_entity)
+            show = get_show_entity(show_raw)
 
-        genre_ids = get_genre_ids(show['genres'])
-        insert_show_genres(genre_ids, show_entity)
+            # Some shorts have no id, some has no date, etc... Skip these
+            if show['id'] is None or show['year'] is None:
+                continue
 
+            statement = """
+                INSERT INTO shows (id, title, year, overview, runtime, trailer, homepage, rating)
+                VALUES (%(id)s, %(title)s, %(year)s, %(overview)s, %(runtime)s, %(trailer)s, %(homepage)s, %(rating)s);"""
+
+            try:
+                execute_dml_statement(statement, show)
+                inserted_ids.append(show['id'])
+
+                if len(show['genres']) > 0:
+                    genre_ids = get_genre_ids(show['genres'])
+                    insert_show_genres(genre_ids, show)
+
+            except DataError:
+                print('Error while inserting ' + show['title'] + '. Skipping this show...')
+            # except IntegrityError:
+            #    print('Show (' + show['title'] + ') already exists...')
+
+            insert_seasons(show['id'])
+
+            progress_bar(total_counter + 1, max_show_count, prefix='Inserting shows:', suffix=show['title'])
+            total_counter += 1
+
+    clear_progress_bar('Inserted ' + str(len(inserted_ids)) + ' shows')
     return inserted_ids
 
 
-def get_season_entity(season, show_id):
-    season_entity = {
-        'season_number': season['number'],
-        'title': season['title'],
-        'overview': season['overview'],
-        'episode_count': season['episode_count'],
-        'show_id': show_id
-    }
-    return season_entity
+def insert_episodes(season):
+    for episode in season['episodes']:
+        stmt = """
+            INSERT INTO episodes (
+                id,
+                title,
+                episode_number,
+                overview,
+                season_id)
+            VALUES (
+                %(id)s,
+                %(title)s,
+                %(episode_number)s,
+                %(overview)s,
+                %(season_id)s
+            );
+        """
+        execute_dml_statement(stmt, get_episode_entity(season['id'], episode))
 
 
-def get_season_id(show_id, season_number):
-    stmt = """
-        SELECT id
-        FROM seasons
-        WHERE show_id LIKE %(show_id)s
-            AND season_number = %(season_number)s;
-    """
-    params = {
-        'show_id': show_id + '%',
-        'season_number': season_number
-    }
-    result = execute_select(stmt, params)
-    return result[0]['id']
+def insert_seasons(show_id):
+    url = TRAKT_API_URL + '/shows/' + str(show_id) + '/seasons?extended=full,episodes'
+    season_request = requests.get(url, headers=headers)
+    for season_raw in season_request.json():
+        statement = """
+            INSERT INTO seasons (
+                id,
+                season_number,
+                title,
+                overview,
+                show_id)
+            VALUES (
+                %(id)s,
+                %(season_number)s,
+                %(title)s,
+                %(overview)s,
+                %(show_id)s
+            );
+        """
 
+        season = get_season_entity(season_raw, show_id)
+        execute_dml_statement(statement, season)
 
-def insert_episodes(show_id):
-    url = trakt_api_url + '/shows/{show_id}/seasons?extended=episodes'.format(show_id=show_id)
-    episode_request = requests.get(url, headers=headers)
-    for season in episode_request.json():
-        season_id = get_season_id(show_id, season['number'])
-        for episode in season['episodes']:
-            stmt = """
-                INSERT INTO episodes (title, episode_number, season_id)
-                SELECT COALESCE(%(title)s, '-'),
-                    %(episode_number)s,
-                    %(season_id)s;
-            """
-            params = {
-                'title': episode['title'],
-                'episode_number': episode['number'],
-                'season_id': season_id
-            }
-            execute_dml_statement(stmt, params)
-
-
-def insert_seasons(show_ids):
-    show_seasons = {}
-    for show_id in show_ids:
-        url = trakt_api_url + '/shows/{show_id}/seasons?extended=full'.format(show_id=show_id)
-        season_request = requests.get(url, headers=headers)
-        for season in season_request.json():
-            stmt = """INSERT INTO seasons (season_number,
-                                            title,
-                                            overview,
-                                            show_id)
-                                    VALUES (%(season_number)s,
-                                            %(title)s,
-                                            %(overview)s,
-                                            %(show_id)s);"""
-
-            season_entity = get_season_entity(season, show_id)
-            execute_dml_statement(stmt, season_entity)
-        insert_episodes(show_id)
-
-    return show_seasons
+        insert_episodes(season)
 
 
 def insert_genres():
-    url = trakt_api_url + '/genres/movies'
+    url = TRAKT_API_URL + '/genres/movies'
     genre_request = requests.get(url, headers=headers)
+    counter = 0
 
-    for genre in genre_request.json():
+    for i, genre in enumerate(genre_request.json()):
         statement = "INSERT INTO genres (name) VALUES (%(name)s);"
         execute_dml_statement(statement, {'name': genre['name']})
+
+        progress_bar(i, TRAKT_EXPECTED_GENRE_COUNT, prefix='Inserting genres:')
+        counter = i
+    clear_progress_bar('Inserted ' + str(counter) + ' genres')
 
 
 def main():
     init_db()
     create_schema()
     insert_genres()
-    print("Genres data inserted")
-    inserted_show_ids = insert_shows(limit=20)
-    print("Show data inserted")
-    show_seasons = insert_seasons(inserted_show_ids)
-    print('Season data inserted')
+    insert_shows(limit=20, max_show_count=10)
+    # print('Season data inserted')
+
 
 if __name__ == '__main__':
     main()
