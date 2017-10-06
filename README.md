@@ -9,20 +9,30 @@ A dumb wireframe is provided in the `design.html` file with will help you mix'n'
 ## Setup
 
 1. Clone this repo
-2. Open a terminal in the root folder of the cloned repository. After that run this command:
-    ```
-    sudo pip3 install -r requirements.txt
-    ```
-3. Fill out the `setenv.sh.template` with your details and rename it to `setenv.sh`
-4. Source the `setenv.sh` file in the command line with **one** of the following commands:
-    - *`source setenv.sh`*
-    - *`. setenv.sh`*
-5. Run the `data_inserter.py` file:
-    ```
-    python3 data/data_inserter.py
-    ``` 
-6. Run the server with: *`python3 main.py`*
-7. After you stop the server run: *`deactivate`* in the command line to clean up the variables used
+1. Open a terminal in the root folder of the cloned repository.
+1. Create a _virtualenv_: `virtualenv venv`
+1. Activate the _virtualenv_: `source venv/bin/activate`
+1. Install pip dependencies: `pip install -r requirements.txt`
+1. Create a Postgres database for this project
+1. Make a copy of the `setenv.sh.template` file in the new name of `setenv.sh`
+1. Fill out the `setenv.sh` with **YOUR** details
+1. Source the `setenv.sh` file in the command line with the `source setenv.sh` command.
+1. To create your database structure, you have 2 options, choose one:
+   1. Using the pre-saved dump data:
+      1. Run the `data/db_schema/01_create_schema.sql` SQL file to create empty tables
+      1. Unzip the `data/dump_1000_shows.zip` file
+      1. Run the unzipped sql files in the following order:
+         1. genres
+         1. shows
+         1. show_genres
+         1. seasons
+         1. episodes
+         1. actors
+         1. show_characters
+   1. Download data dynamically
+      1. Run the `data_inserter.py` Python script to scrape the API and download data dynamically.
+1. Run the server with: *`python main.py`*
+1. After you stop the server run: *`deactivate`* in the command line to clean up the variables used
 
 ## Database
 
