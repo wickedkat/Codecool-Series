@@ -74,7 +74,7 @@ def execute_select(statement, variables=None):
     Execute SELECT statement optionally parameterized
 
     Example:
-    > execute_select('SELECT %(title)s;', variables={'title': 'Codecool'})
+    > execute_select('SELECT %(title)s; FROM shows', variables={'title': 'Codecool'})
 
     :statment: SELECT statement
 
