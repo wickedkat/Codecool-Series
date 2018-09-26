@@ -63,7 +63,7 @@ def execute_script_file(file_path):
             try:
                 sql_to_run = script_file.read()
                 cursor.execute(sql_to_run)
-                print("{} script executed successsfully.".format(file_path))
+                print("{} script executed successfully.".format(file_path))
             except Exception as ex:
                 print("Execution of {} failed".format(file_path))
                 print(ex.args)
@@ -76,7 +76,7 @@ def execute_select(statement, variables=None):
     Example:
     > execute_select('SELECT %(title)s; FROM shows', variables={'title': 'Codecool'})
 
-    :statment: SELECT statement
+    :statement: SELECT statement
 
     :variables:  optional parameter dict"""
     result_set = []
