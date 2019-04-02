@@ -1,5 +1,10 @@
-from data import data_manager
+from data import database_connection
 
+@database_connection.connection_handler
+def get_shows(cursor):
+    cursor.execute("""
+            SELECT id, title FROM shows  
+    """),
+    shows = cursor.fetchall()
+    return shows
 
-def get_shows():
-    return data_manager.execute_select('SELECT id, title FROM shows;')
