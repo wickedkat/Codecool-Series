@@ -24,14 +24,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style/table.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/form.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/modal.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/utils.css') }}">
 
     <!-- page specific styling -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style/detailed-view.css') }}">
 
+    <!-- scripts -->
+    <script src="{{ url_for('static', filename='scripts/dom.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/authentication.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/main.js') }}" defer></script>
+
 </head>
 
 <body>
+</div>
+<div class="background">
+    <div class="dark-blue-layer"></div>
+    <div class="light-blue-layer"></div>
+</div>
 <div id="body-wrapper">
     <header class="clearfix">
         <img id="header-logo" src="{{ url_for('static', filename='assets/codecool-logo.png') }}" alt="Codecool Logo">
@@ -39,10 +50,13 @@
                         Codecool Series DB
                     </span>
         <div id="header-auth">
-            <button type="button" id="bt_register">Register</button>
-            <button type="button" id="bt_login">Login</button>
+            <a href="/logout" id="Logout"> Logout</a>
+            <h5 id="hello"></h5>
+            <button type="button" id="Register" onclick="dom.showRegisterModal()">Register</button>
+            <button type="button" id="Login" onclick="dom.showLoginModal()">Login</button>
         </div>
     </header>
+
     <section>
         <h1 class="title text-center">Welcome page</h1>
         <div class="card">
@@ -65,13 +79,41 @@
             </ul>
         </div>
     </section>
+    <div class="bg-modal" id="login-modal">
+        <div class="modal-contents">
+
+            <div class="close" onclick="dom.hideLoginModal()">+</div>
+            <div class="login-header">Log in</div>
+            <p id="login-error"></p>
+
+            <form action="/login" id="login-form">
+                <input type="text" placeholder="username" name="username" id="login_username">
+                <input type="password" placeholder="password" name="password" id="login_password">
+                <button class="btn btn-success" type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="bg-modal" id="register-modal">
+        <div class="modal-contents">
+
+            <div class="close" onclick="dom.hideRegisterModal()">+</div>
+            <div class="login-header">Registration</div>
+
+            <p id="register-error"></p>
+
+            <form action="/register" id="register-form" role="form">
+                <input type="text" placeholder="username" name="username" id="register_username">
+                <input type="password" placeholder="password" name="password" id="register_password">
+                <button class="btn btn-success" type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div>
     <footer>
         Copyright, bla-bla
     </footer>
-</div>
-<div class="background">
-    <div class="dark-blue-layer"></div>
-    <div class="light-blue-layer"></div>
 </div>
 </body>
 </html>

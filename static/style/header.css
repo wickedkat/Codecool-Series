@@ -26,3 +26,34 @@ header > * {
 
     margin: 15px;
 }
+
+#Logout {
+    float: right;
+    margin-left: 10px;
+    color: white;
+    padding: 10px;
+    border: solid 2px whitesmoke;
+    display: none;
+    width: content-box;
+    text-align: center;
+
+}
+#Logout:hover {
+    color:red;
+    border: solid 2px white;
+    text-decoration: none;
+}
+
+#hello {
+    float: right;
+    padding: 10px;
+    margin: 10px;
+    color: white;
+    display: none;
+    font-size: 22px;
+    font-family: "Bradley Hand";
+}
+
+#hello:hover {
+    text-decoration: none;
+}

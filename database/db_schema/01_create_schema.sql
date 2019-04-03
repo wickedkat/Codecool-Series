@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS genres;
 DROP TABLE IF EXISTS actors;
 DROP TABLE IF EXISTS seasons;
 DROP TABLE IF EXISTS shows;
+DROP TABLE IF EXISTS users;
 
 
 CREATE TABLE shows (
@@ -64,6 +65,14 @@ CREATE TABLE episodes (
     episode_number SMALLINT            NOT NULL,
     overview       TEXT,
     season_id      INTEGER             NOT NULL
+);
+
+
+CREATE TABLE users (
+                       id serial PRIMARY KEY,
+                       creation_date date NOT NULL ,
+                       username varchar(250) UNIQUE NOT NULL,
+                       password varchar(250) NOT NULL
 );
 
 
