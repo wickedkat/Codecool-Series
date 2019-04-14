@@ -1,5 +1,5 @@
-from user_handler import hash_handler
-from database import database_queries
+from logic.user_handler import hash_handler
+from database.queries import database_user
 
 
 def check_user_in_database(username):
@@ -15,7 +15,7 @@ def check_user_in_database(username):
     or
     False
     '''
-    user_exists = database_queries.select_user_by_username(username)
+    user_exists = database_user.select_user_by_username(username)
     if user_exists:
         return user_exists
     else:

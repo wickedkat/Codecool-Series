@@ -13,7 +13,6 @@
     text-align: right;
 }
 
-form input,
 form select {
     padding: 4px 6px;
 
@@ -25,4 +24,36 @@ form select {
     background: #fff;
 
     -webkit-appearance: none;
+}
+
+form input {
+    padding: 4px 6px;
+    width: 200px;
+
+    cursor: pointer;
+
+    border: 1px solid #4c97ca;
+    -webkit-border-radius: 0;
+    border-radius: 2px;
+    background: #fff;
+
+    -webkit-appearance: none;
+
+}
+
+.biography {
+    height:60px;
+    width: 300px;
+}
+
+#add-actor {
+    display: none;
+}
+
+.invalid {
+    border: 1px solid crimson;
+}
+
+.text-invalid {
+    color:crimson;
 }

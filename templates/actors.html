@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>CsED</title>
+
+    <!-- Import Montserrat font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <!-- Normalize.css fixes lot of differences between browsers default styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
+
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <!-- project wide styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/site.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/background.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/button.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/card.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/utils.css') }}">
+
+    <!-- page specific styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/detailed-view.css') }}">
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" >
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+    <!-- scripts -->
+    <script src="{{ url_for('static', filename='scripts/dom.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/actors.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/datepicker.js') }}" defer></script>
+
+
+
+</head>
+
+<body>
+<div class="background">
+    <div class="dark-blue-layer"></div>
+    <div class="light-blue-layer"></div>
+</div>
+<div id="body-wrapper">
+    <header class="clearfix">
+        <img id="header-logo" src="{{ url_for('static', filename='assets/codecool-logo.png') }}" alt="Codecool Logo">
+        <span id="header-title" class="title">
+                        Codecool Series DB
+                    </span>
+        <div id="header-auth">
+            {% if session['username'] %}
+                <a href="/logout" id="Logout" style="display: flex;"> Logout</a>
+                <h5 id="hello" style="display: flex;">hello {{ session['username'] }}</h5>
+            {% endif %}
+        </div>
+    </header>
+
+
+    <section>
+        <nav class="breadcrumb">
+            <a href="/main">List of all shows</a>
+            <span class="separator">&gt;</span>
+            <a href="/actors">List of all actors</a>
+
+        </nav>
+    <br>
+        <div class="card" id="menu">
+            <button type="button" onclick="dom.showAddActorForm()"> + Actor</button>
+            <div class="card" id="add-actor">
+                <div class="close" onclick="dom.hideAddActorForm()">+</div>
+                <p>Add new actor:</p>
+                <p id="add-actor-error"></p>
+
+                <form action="/actors/add"  id="add-actor-form" method="post">
+                    <p class="form-element">
+                        <label class="form-element-label" for="form-example-show">Actor's name:</label>
+                        <input type="text" placeholder="Name Surname" name="name" id="name">
+                    </p>
+
+                    <p class="form-element">
+                        <label class="form-element-label" for="form-example-season">Birthday:</label>
+                        <input type="date" data-date-format="YYYY-MM-DD" min="1900-01-01" max="today" name="birthday" id="birthday">
+                    </p>
+                    <p class="form-element">
+                        <label class="form-element-label" for="form-example-episode">Death:</label>
+                        <input type="date" data-date-format="YYYY-MM-DD" min="1900-01-01" max="today" name="death" id="death">
+                    </p>
+                    <p class="form-element">
+                        <label class="form-element-label" for="form-example-title">Biography:</label>
+                        <input type="text" class="biography" placeholder="Biography..." name="biography" id="biography">
+                    </p>
+                    <p class="text-center">
+                        <button type="submit" onclick="actors.addNewActor()">Submit</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+        <h1 class="title text-center">List of all actors</h1>
+        <div class="card">
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Birth date</th>
+                    <th> RIP</th>
+                    <th>Biography</th>
+                    <th>Roles</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for actor in actors %}
+                    <tr>
+                        <td>{{ actor.name }}</td>
+                        <td>{{ actor.birthday }}</td>
+                        <td>{{ actor.death }}</td>
+                        {% if actor.biography %}
+                            <td class="longtext">{{ actor.biography }}</td>
+                        {% else %}
+                            <td> 'No data'</td>
+                        {% endif %}
+                        <td>
+                            <button type="button" id="button {{ actor.id }}" class="button-actors"
+                                    onclick="actors.getActorsDetails('{{ actor.id }}')">{{ actor.roles_count }} role(s)
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <div class="bg-modal" id="loading-modal">
+        <div class="modal-contents">
+            <header id="loading"></header>
+            <h3>Loading...</h3>
+            <i class="fas fa-spinner"></i>
+        </div>
+    </div>
+    <div class="bg-modal" id="roles-modal">
+        <div class="modal-contents">
+
+            <div class="close" onclick="dom.hideRolesModal()">+</div>
+            <div id="roles-header"></div>
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Character name</th>
+                    <th scope="col">Show title</th>
+                    <th scope="col">Show overview</th>
+
+                </tr>
+                </thead>
+                <tbody id="table-roles">
+
+
+                </tbody>
+            </table>
+
+
+        </div>
+
+        <footer>
+            You want a revolution, I want a revelation. <img src="/static/assets/Katslair_logo.png" height="10px"
+                                                             width="10px">
+        </footer>
+    </div>
+</div>
+</body>
+</html>

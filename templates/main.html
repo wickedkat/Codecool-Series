@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>CsED</title>
+
+    <!-- Import Montserrat font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <!-- Normalize.css fixes lot of differences between browsers default styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
+
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <!-- project wide styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/site.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/background.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/button.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/card.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/utils.css') }}">
+
+    <!-- page specific styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/detailed-view.css') }}">
+
+    <!-- scripts -->
+    <script src="{{ url_for('static', filename='scripts/dom.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/authentication.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/table_mainpage.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/sorting.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/main.js') }}" defer></script>
+
+</head>
+
+<body>
+</div>
+<div class="background">
+    <div class="dark-blue-layer"></div>
+    <div class="light-blue-layer"></div>
+</div>
+<div id="body-wrapper">
+    <header class="clearfix">
+        <img id="header-logo" src="{{ url_for('static', filename='assets/codecool-logo.png') }}" alt="Codecool Logo">
+        <span id="header-title" class="title">
+                        Codecool Series DB
+                    </span>
+        <div id="header-auth">
+            {% if session['username'] %}
+                <a href="/logout" id="Logout" style="display: flex;"> Logout</a>
+                <h5 id="hello" style="display: flex;">hello {{ session['username'] }}</h5>
+            {% endif %}
+        </div>
+    </header>
+
+    <section>
+        <h1 class="title text-center">Welcome page</h1>
+        <div class="card" id="menu">
+            <button type="button" style="float: right;"><a href="/actors">Actors</a></button>
+            <span class="sort_form" >
+                <form action="/shows_by_genre" method="post">
+                    <label for="genre">Display shows from genre:</label><br><br>
+                    <select id="genre" name="genre">
+                        {%  for genre in genres %}
+                            <option value="{{genre.name}}">{{ genre.name }}</option>
+                        {%  endfor %}
+                    </select>
+                    <button type="submit">Submit</button>
+                </form>
+            </span>
+        </div>
+        <div class="card">
+            <b>List of all shows</b>
+            <button type="button" id="previous" style="margin-left: 10px" onclick="mainpage.showPreviousPage()">Previous
+                page
+            </button>
+            <button type="button" id="next" onclick="mainpage.showNextPage()">Next page</button>
+
+            <table>
+                <thead>
+                <tr>
+                    <th><i class=" sort far fa-caret-square-down"
+                           onclick="sort.sortByAlphabeticalOrder('desc', 'title')"></i>Show<i
+                            class=" sort far fa-caret-square-up"
+                            onclick="sort.sortByAlphabeticalOrder('asc', 'title')"></i></th>
+                    <th><i class=" sort far fa-caret-square-down" onclick="sort.sortByNumericOrder('desc','year')"></i>Release
+                        year<i class=" sort far fa-caret-square-up" onclick="sort.sortByNumericOrder('asc','year')"></i>
+                    </th>
+                    <th><i class=" sort far fa-caret-square-down"
+                           onclick="sort.sortByNumericOrder('desc','runtime')"></i>Runtime<i
+                            class=" sort far fa-caret-square-up" onclick="sort.sortByNumericOrder('asc','runtime')"></i>
+                    </th>
+                    <th><i class=" sort far fa-caret-square-down"
+                           onclick="sort.sortByAlphabeticalOrder('desc', 'genre')"></i>Genres<i
+                            class=" sort far fa-caret-square-up"
+                            onclick="sort.sortByAlphabeticalOrder('asc', 'genre')"></i></th>
+                    <th><i class=" sort far fa-caret-square-down"
+                           onclick="sort.sortByNumericOrder('desc','rating')"></i>Rating<i
+                            class=" sort far fa-caret-square-up" onclick="sort.sortByNumericOrder('asc','rating')"></i>
+                    </th>
+                    <th>Trailer</th>
+                    <th>WWW</th>
+                    <th>Seasons</th>
+                    <th class="action-column">#</th>
+                </tr>
+                </thead>
+                <tbody id="shows_mainpage">
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <div class="bg-modal" id="login-modal">
+        <div class="modal-contents">
+
+            <div class="close" onclick="dom.hideLoginModal()">+</div>
+            <div class="login-header">Log in</div>
+            <p id="login-error"></p>
+
+            <form action="/login" id="login-form">
+                <input type="text" placeholder="username" name="username" id="login_username">
+                <input type="password" placeholder="password" name="password" id="login_password">
+                <button class="btn btn-success" type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div>
+    <div class="bg-modal" id="loading-modal">
+        <div class="modal-contents">
+            <header id="loading"></header>
+            <h3>Loading...</h3>
+            <i class="fas fa-spinner"></i>
+        </div>
+    </div>
+
+    <div class="bg-modal" id="register-modal">
+        <div class="modal-contents">
+
+            <div class="close" onclick="dom.hideRegisterModal()">+</div>
+            <div class="login-header">Registration</div>
+
+            <p id="register-error"></p>
+
+            <form action="/register" id="register-form" role="form">
+                <input type="text" placeholder="username" name="username" id="register_username">
+                <input type="password" placeholder="password" name="password" id="register_password">
+                <button class="btn btn-success" type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div>
+    <div class="bg-modal" id="seasons-modal">
+        <div class="modal-contents">
+
+            <div class="close" onclick="dom.hideSeasonsModal()">+</div>
+            <div id="seasons-header"></div>
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Season title</th>
+
+                </tr>
+                </thead>
+                <tbody id="table-seasons">
+
+
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+    <footer>
+        You want a revolution, I want a revelation. <img src="/static/assets/Katslair_logo.png" height="10px"
+                                                         width="10px">
+    </footer>
+</div>
+</body>
+</html>

@@ -1,8 +1,9 @@
 let authentication = {
 
-    loginHandler: function(){
-    handleLogin()},
-    registrationHandler: function() {
+    loginHandler: function () {
+        handleLogin()
+    },
+    registrationHandler: function () {
         handleRegistration()
     }
 };
@@ -10,8 +11,8 @@ let authentication = {
 /*                            LOGIN FUNCTIONS                                  */
 
 let message;
-let registerUsername;
-let loginUsername;
+let sessionUsername;
+let status;
 
 
 function handleLogin() {
@@ -38,10 +39,11 @@ function validateLogin(username, password, callback) {
     } else {
         password.classList.remove('invalid')
     }
-    if (loginErrors.length > 0){
+    if (loginErrors.length > 0) {
         displayLoginErrors(loginErrors);
-    }else {
-        callback(username, password)}
+    } else {
+        callback(username, password)
+    }
 }
 
 
@@ -52,27 +54,29 @@ function displayLoginErrors(errors) {
 }
 
 function loginUser(username, password) {
+
     let loginRequest = new XMLHttpRequest();
     loginRequest.onreadystatechange = function () {
         if (loginRequest.readyState == 4) {
             if (loginRequest.status == 200) {
-                message = JSON.parse(loginRequest.response);
-                afterServerResponse(message)
+                let response = JSON.parse(loginRequest.response);
+                message = response['message'];
+                status = response['status'];
+                afterServerResponse(message, status)
             } else {
                 alert('Connection error. Try again later.');
             }
         }
 
     };
-    loginUsername = username.value;
+    sessionUsername = username.value;
     let loginPassword = password.value;
-    let loginData = {'username': loginUsername, 'password': loginPassword};
+    let loginData = {'username': sessionUsername, 'password': loginPassword};
     loginData = JSON.stringify(loginData);
     loginRequest.open("POST", '/login');
     loginRequest.setRequestHeader('Content-Type', 'application/json');
     loginRequest.send(loginData);
 }
-
 
 
 
@@ -106,12 +110,12 @@ function validateRegistration(username, password, callback) {
     } else {
         password.classList.remove('invalid')
     }
-    if (registrationErrors.length > 0){
+    if (registrationErrors.length > 0) {
         displayRegistrationErrors(registrationErrors);
     } else {
-        callback(username, password)}
+        callback(username, password)
+    }
 }
-
 
 
 function displayRegistrationErrors(errors) {
@@ -126,17 +130,19 @@ function registerUser(username, password) {
     registerRequest.onreadystatechange = function () {
         if (registerRequest.readyState == 4) {
             if (registerRequest.status == 200) {
-                message = JSON.parse(registerRequest.response);
-                afterServerResponse(message)
+                let response = JSON.parse(registerRequest.response);
+                message = response['message'];
+                status = response['status'];
+                afterServerResponse(message, status)
             } else {
                 alert('Connection error. Try again later.');
             }
         }
 
     };
-    registerUsername = username.value;
+    sessionUsername = username.value;
     let registerPassword = password.value;
-    let registerData = {'username': registerUsername, 'password': registerPassword};
+    let registerData = {'username': sessionUsername, 'password': registerPassword};
     registerData = JSON.stringify(registerData);
     registerRequest.open("POST", "/register");
     registerRequest.setRequestHeader('Content-Type', 'application/json');
@@ -144,10 +150,11 @@ function registerUser(username, password) {
 
 }
 
+
 function afterServerResponse(message) {
     dom.hideRegisterModal();
     dom.hideLoginModal();
     alert(message);
-    dom.viewAfterUserForm(message)
+    dom.viewAfterUserForm(status, sessionUsername)
 }
 

@@ -1,11 +1,12 @@
 .close {
-    position: absolute;
+    position:absolute ;
     top: 0;
     right: 10px;
     font-size: 42px;
     color: #333;
     transform: rotate(45deg);
-    cursor: pointer;}
+    cursor: pointer;
+}
 
 .close:hover {
     color: #666;
@@ -22,8 +23,8 @@
     margin-left: auto;
     margin-right: auto;
     margin-top: auto;
-    margin-bottom: auto;
     top: 0;
+
 }
 
 .modal-contents
@@ -32,6 +33,10 @@
     width: fit-content;
     background-color: whitesmoke;
     text-align: center;
-    padding: 20px;
+    padding: 50px;
     position: relative;
-    border-radius: 12px;}
+    border-radius: 12px;
+    max-height: 450px;
+    overflow-y: auto;
+    min-width: 300px;
+    }

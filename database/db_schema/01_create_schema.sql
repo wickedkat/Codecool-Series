@@ -27,7 +27,7 @@ CREATE TABLE genres (
 
 
 CREATE TABLE actors (
-    id        INTEGER PRIMARY KEY NOT NULL,
+    id        SERIAL PRIMARY KEY NOT NULL,
     name      VARCHAR(200)        NOT NULL,
     birthday  DATE,
     death     DATE,
@@ -97,3 +97,5 @@ ALTER TABLE ONLY show_genres
 
 ALTER TABLE ONLY show_genres
     ADD CONSTRAINT fk_show_genres_show_id FOREIGN KEY (show_id) REFERENCES shows(id);
+
+

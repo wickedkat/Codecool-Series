@@ -6,6 +6,7 @@ table {
 
     border: 1px solid #278bc4;
     border-radius: 3px;
+
 }
 
 table th {
@@ -14,7 +15,10 @@ table th {
 }
 
 table td {
-    font-size: 13px;
+    font-size: 12px;
+    text-align: center;
+    border: dashed 0.3px rgba(55, 55, 55, 0.9);
+
 }
 
 table th,
@@ -29,4 +33,12 @@ table tr:nth-child(even) {
 
 table th.action-column {
     background: rgb(203, 75, 70);
+}
+
+#table-episodes td {
+    max-width: 500px;
+}
+
+.longtext {
+    max-width: 450px;
 }
