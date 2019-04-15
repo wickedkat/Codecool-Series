@@ -61,10 +61,12 @@
         <nav class="breadcrumb">
             <a href="/">List of all shows</a>
             <span class="separator">&gt;</span>
-            <a href="/{{ episodes.show_id[0]}}">{{ episodes.show.title[0]}}</a>
+            <a href="/{{show.id}}"> {{show.title}} seasons</a>
+            <span class="separator">&gt;</span>
+            <a href="/{{show.season_id}}/episodes">{{show.season_title}} episodes</a>
 
         </nav>
-        <h1 class="title text-center">Season details: {{episodes.season_title[0]}}</h1>
+        <h1 class="title text-center">{{show.title}}: {{show.season_title}} episodes </h1>
 
             <div class="card">
                 <table>
