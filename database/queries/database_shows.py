@@ -147,3 +147,21 @@ def get_show_by_id(cursor, showId):
 
     show = cursor.fetchone()
     return show
+
+@database_connection.connection_handler
+def get_show_by_season_id(cursor, seasonID):
+    cursor.execute("""
+            SELECT shows.id,
+            shows.title
+            from shows   
+            JOIN seasons s on shows.id = s.show_id
+            WHERE s.id = %(seasonID)s
+    
+    """,
+                   {'seasonID':seasonID})
+
+    show = cursor.fetchone()
+    return show
+
+
+
