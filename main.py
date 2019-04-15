@@ -34,6 +34,16 @@ def get_shows_by_genre():
                                genre=genre)
 
 
+@app.route('/shows', methods=["GET"])
+def show_mainpage():
+    try:
+        shows = data_validation.validate_shows()
+        json_shows = json.dumps(shows)
+        return json_shows
+    except data_validation.InvalidData:
+        return render_template('error_url.html')
+
+
 @app.route('/design')
 def design():
     return render_template('design.html')
