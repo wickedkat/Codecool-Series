@@ -1,6 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<div id="body-wrapper">
+    <header class="clearfix">
+        <img id="header-logo" src="{{ url_for('static', filename='assets/codecool-logo.png') }}" alt="Codecool Logo">
+        <span id="header-title" class="title">
+                        Codecool Series DB
+                    </span>
+        <div id="header-auth">
+            <a href="/logout" id="Logout"> Logout</a>
+            <h5 id="hello"></h5>
+            <button type="button" id="Register" >Register</button>
+            <button type="button" id="Login" >Login</button>
+        </div>
+    </header>
+
 <section>
     <h1 class="title text-center">Welcome page</h1>
     <div class="card">
@@ -64,5 +78,6 @@
 
 
     </div>
+</div>
 
 {%  endblock %}
