@@ -89,7 +89,7 @@
                 <tbody>
                 {% for actor in actors %}
                     <tr>
-                        <td>{{ actor.name }}</td>
+                        <td><a style="cursor:pointer" onclick="dom.showRolesModal()">{{ actor.name }}</a></td>
                         <td>{{ actor.birthday }}</td>
                         <td>{{ actor.death }}</td>
                         {% if actor.biography %}
