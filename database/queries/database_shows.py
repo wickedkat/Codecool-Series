@@ -100,6 +100,7 @@ def get_episodes_by_show_and_season(cursor, season_id):
     cursor.execute("""
             SELECT 
                 seasons.title as season_title,
+                episodes.id as episode_id,
                 to_char(episode_number, '999') as episode_number,
                 episodes.title as episode_title,
                 episodes.overview as episode_overview
