@@ -62,6 +62,23 @@ mainpage = {
         return '<a href="' + homepage + '" target="_blank"><img src="/static/assets/house.png" height="14px" width="14px" align="center" ></a>'
     },
 
+    limitGenres: function limitGenres(listgenres) {
+        let allGenres = listgenres;
+        let genres = [];
+        if (allGenres[0] !== null) {
+            for (let j = 0; j < 3; j++) {
+                if (j < allGenres.length) {
+                    genres.push(allGenres[j])
+                } else {
+                    break
+                }
+            }
+            return genres
+        } else {
+            return 'Not assigned'
+        }
+    },
+
 };
 
 
