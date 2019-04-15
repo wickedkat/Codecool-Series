@@ -59,7 +59,7 @@ def get_all_shows(cursor):
             trailer, 
             homepage, 
             array_agg(DISTINCT name) as genre,
-            array_agg(DISTINCT seasons.title) as seasons,
+            array_agg(DISTINCT seasons.title) as seasons_titles,
             shows.id as id
             from shows
             LEFT JOIN show_genres on shows.id = show_genres.show_id
