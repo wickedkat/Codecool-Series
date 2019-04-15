@@ -10,6 +10,13 @@ let dom = {
     hideLoadingModal: function hideLoadingModal() {
         document.getElementById('loading-modal').style.display = "none";
     },
+    showSeasonsModal: function showSeasonsModal() {
+        document.getElementById('seasons-modal').style.display = "flex";
+    },
+
+    hideSeasonsModal: function hideSeasonsModal() {
+        document.getElementById('seasons-modal').style.display = "none";
+    }
 
 };
 
