@@ -1,5 +1,7 @@
 from database.queries import database_shows
 
+from logic.data_handler import data_format
+
 
 class InvalidData(Exception):
     pass
@@ -45,3 +47,9 @@ def validate_shows():
     shows_db = database_shows.get_all_shows()
     shows = check_empty_list(shows_db)
     return shows
+
+def validate_seasons(showId):
+    seasons_db = database_shows.get_seasons_by_show(showId)
+    seasons = data_format.get_episodes_by_show_and_season(seasons_db)
+    checked_seasons = check_empty_list(seasons)
+    return checked_seasons
