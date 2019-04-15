@@ -68,7 +68,7 @@ mainpage = {
             '<td>' + mainpage.createHomepageIcon(show.homepage) + '</td>' +
             '<td>' + mainpage.seasonsHandler(show.seasons_titles, show) + '</td>' +
             '<td class="action-column"><button type="button" class="icon-button"><i class="fa fa-edit fa-fw"></i></button><button type="button" class="icon-button"><i class="fa fa-trash fa-fw"></i></button></td>'
-        /*mainpage.createSeasonsModalUnderButton(show)*/
+        mainpage.createSeasonsModalUnderButton(show)
 
     },
 
