@@ -14,13 +14,27 @@
         </p>
     </div>
     <div class="card">
-        <ul>
-            {% for show in shows %}
-            <li>
-                <a href="{{ '/tv-show/' + (show['id'] | string) }}">{{ show['title'] }}</a>
-            </li>
-            {% endfor %}
-        </ul>
+        <b>List of all shows</b>
+        <button type="button" id = "previous" style="margin-left: 10px" onclick="mainpage.showPreviousPage()">Previous page</button>
+        <button type="button" id = "next" onclick="mainpage.showNextPage()">Next page</button>
+
+        <table>
+            <thead>
+            <tr>
+                <th><i class=" sort far fa-caret-square-down" onclick="sort.sortByAlphabeticalOrder('desc', 'title')"></i>Show<i class=" sort far fa-caret-square-up" onclick="sort.sortByAlphabeticalOrder('asc', 'title')"></i></th>
+                <th><i class=" sort far fa-caret-square-down" onclick="sort.sortByNumericOrder('desc','year')"></i>Release year<i class=" sort far fa-caret-square-up" onclick="sort.sortByNumericOrder('asc','year')"></i></th>
+                <th><i class=" sort far fa-caret-square-down" onclick="sort.sortByNumericOrder('desc','runtime')"></i>Runtime<i class=" sort far fa-caret-square-up" onclick="sort.sortByNumericOrder('asc','runtime')"></i></th>
+                <th><i class=" sort far fa-caret-square-down" onclick="sort.sortByAlphabeticalOrder('desc', 'genre')"></i>Genres<i class=" sort far fa-caret-square-up" onclick="sort.sortByAlphabeticalOrder('asc', 'genre')"></i></th>
+                <th><i class=" sort far fa-caret-square-down" onclick="sort.sortByNumericOrder('desc','rating')"></i>Rating<i class=" sort far fa-caret-square-up" onclick="sort.sortByNumericOrder('asc','rating')"></i></th>
+                <th>Trailer</th>
+                <th>WWW</th>
+                <th>Seasons</th>
+                <th class="action-column">#</th>
+            </tr>
+            </thead>
+            <tbody id="shows_mainpage">
+            </tbody>
+        </table>
     </div>
 </section>
 
