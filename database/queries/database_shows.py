@@ -95,3 +95,21 @@ def get_seasons_by_show(cursor, showId):
     return seasons
 
 
+@database_connection.connection_handler
+def get_episodes_by_show_and_season(cursor, season_id):
+    cursor.execute("""
+            SELECT 
+                seasons.title as season_title,
+                to_char(episode_number, '999') as episode_number,
+                episodes.title as episode_title,
+                episodes.overview as episode_overview
+                FROM episodes
+                LEFT JOIN seasons  on episodes.season_id = seasons.id
+                JOIN shows  on seasons.show_id = shows.id
+                WHERE seasons.id = %(season_id)s          
+    """,
+
+                   {'season_id': season_id}),
+
+    episodes = cursor.fetchall()
+    return episodes
