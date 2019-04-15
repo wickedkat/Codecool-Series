@@ -1,6 +1,7 @@
 from flask import Flask, render_template, json, session, redirect, request
 
 from database.queries import database_shows
+from logic.data_handler import data_validation
 
 
 app = Flask('codecool_series')
@@ -10,9 +11,12 @@ app.secret_key="Don'tlooseurhead"
 
 @app.route('/')
 def index():
-    shows =  database_shows.get_just_shows()
-    return render_template('index.html',
-                           shows = shows)
+    try:
+        genres = data_validation.validate_genres_list()
+        return render_template('mainpage.html',
+                               genres=genres)
+    except data_validation.InvalidData:
+        return render_template('mainpage_no_genres.html')
 
 
 @app.route('/design')
