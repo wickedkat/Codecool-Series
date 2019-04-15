@@ -126,7 +126,7 @@ def get_show_by_id(cursor, showId):
             trailer,
             homepage,
             shows.overview,
-            array_agg(DISTINCT genres.name) as genre,
+            string_agg(DISTINCT genres.name, ',') as genre,
             array_agg(DISTINCT seasons.title) as seasons,
             to_char(shows.id, '999999') as id
             from shows
