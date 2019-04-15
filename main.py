@@ -62,8 +62,10 @@ def display_episodes_by_season(season_id):
     try:
         data_validation.check_datatype_integer(season_id)
         episodes = data_validation.validate_episodes(season_id)
+        show = data_validation.validate_show_by_seasonId(season_id)
         return render_template('episodes.html',
-                               episodes = episodes)
+                               episodes = episodes,
+                               show = show)
     except data_validation.InvalidFormat:
         return render_template('error_url.html')
     except data_validation.InvalidData:
