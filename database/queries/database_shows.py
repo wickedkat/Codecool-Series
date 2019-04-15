@@ -67,7 +67,7 @@ def get_all_shows(cursor):
             LEFT JOIN seasons on shows.id = seasons.show_id
             GROUP BY shows.title, shows.year, shows.runtime,
             shows.rating, shows.trailer, shows.homepage, shows.id
-            ORDER BY rating DESC            
+            ORDER BY rating DESC           
             """),
     shows = cursor.fetchall()
     return shows
@@ -113,3 +113,20 @@ def get_episodes_by_show_and_season(cursor, season_id):
 
     episodes = cursor.fetchall()
     return episodes
+
+
+@database_connection.connection_handler
+def get_show_title_by_id(cursor, showId):
+    cursor.execute("""
+            SELECT title,
+             shows.id,
+             array_agg(DISTINCT genres.name) as genre
+             from shows
+             LEFT JOIN show_genres on shows.id = show_genres.show_id
+            LEFT JOIN genres on show_genres.genre_id = genres.id
+            WHERE shows.id = %(showId)s
+            """,
+                   {'showId': showId})
+
+    title = cursor.fetchone()
+    return title
