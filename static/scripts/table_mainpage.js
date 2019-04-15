@@ -27,6 +27,29 @@ mainpage = {
         dataRequest.send();
     },
 
+    showPreviousPage: function showPreviousPage() {
+        if (Start === 0) {
+            alert('This is the first page');
+
+        } else {
+            Start -= 15;
+            End -= 15;
+            deleteRows();
+            createTable(shows, Start, End)
+        }
+    },
+
+    showNextPage: function showNextPage() {
+        if (End > 1005) {
+            alert('This is the last page')
+        } else {
+            Start += 15;
+            End += 15;
+            deleteRows();
+            createTable(shows, Start, End)
+        }
+    },
+
     createTable: function createTable(shows, start, end) {
         for (i = start; i < end; i++) {
             show = shows[i];
