@@ -16,7 +16,14 @@ let dom = {
 
     hideSeasonsModal: function hideSeasonsModal() {
         document.getElementById('seasons-modal').style.display = "none";
-    }
+    },
+    showRolesModal: function showEpisodesModal() {
+        document.getElementById('roles-modal').style.display = "flex";
+    },
+
+    hideRolesModal: function hideEpisodesModal() {
+        document.getElementById('roles-modal').style.display="none";
+    },
 
 };
 
