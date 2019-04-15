@@ -83,6 +83,16 @@ def display_episode_details(season_id, episode_id):
         return render_template('error_url.html')
 
 
+@app.route('/actors')
+def display_actors():
+    try:
+        actors = data_validation.validate_actors_list()
+        return render_template('actors.html',
+                               actors=actors)
+    except data_validation.InvalidData:
+        return render_template('error_url.html')
+
+
 
 
 @app.route('/design')
