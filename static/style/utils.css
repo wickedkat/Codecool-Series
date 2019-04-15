@@ -20,3 +20,17 @@
 
     padding: 0 5px;
 }
+
+.error {
+
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    text-align: center;
+}
+
+#menu {
+    border: 3px solid crimson;
+    border-radius: 12px;
+}
