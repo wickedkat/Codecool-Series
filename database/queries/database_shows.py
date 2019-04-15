@@ -132,7 +132,7 @@ def get_show_by_id(cursor, showId):
             trailer,
             homepage,
             shows.overview,
-            string_agg(DISTINCT genres.name, ',') as genre,
+            string_agg(DISTINCT genres.name, ', ') as genre,
             array_agg(DISTINCT seasons.title) as seasons,
             to_char(shows.id, '999999') as id
             from shows
@@ -169,12 +169,14 @@ def get_show_by_season_id(cursor, seasonID):
 @database_connection.connection_handler
 def get_all_actors(cursor):
     cursor.execute("""
-            SELECT id,
+            SELECT actors.id,
             name,
             COALESCE(to_char(birthday, 'DD/MM/YYYY'), 'no data') as birthday,
             COALESCE(to_char(death, 'DD/MM/YYYY'), 'alive') as death,
-            biography
+            biography,
+            string_agg(DISTINCT sc.character_name, ', ') as roles
             from actors
+            JOIN show_characters sc on actors.id = sc.actor_id
             LIMIT 20
             
             """)
