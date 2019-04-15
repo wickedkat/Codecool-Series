@@ -63,3 +63,8 @@ def validate_episodes(seasonId):
     episodes_db = database_shows.get_episodes_by_show_and_season(seasonId)
     episodes = check_empty_list(episodes_db)
     return episodes
+
+def validate_show_by_seasonId(seasonId):
+    show_db = database_shows.get_show_by_season_id(seasonId)
+    show = check_empty_list(show_db)
+    return show
