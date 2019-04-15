@@ -20,3 +20,13 @@
 
     padding: 0 5px;
 }
+
+.sort {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.sort:hover {
+    color: crimson;
+    cursor: pointer;
+}
