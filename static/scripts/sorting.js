@@ -6,8 +6,8 @@ sort = {
                 shows = shows.sort(function (obj1, obj2) {
                     return obj1[condition]  - obj2[condition]
                 });
-                deleteRows();
-                createTable(shows, Start, End);
+                mainpage.deleteRows();
+                mainpage.createTable(shows, Start, End);
                 break;
 
 
@@ -15,8 +15,8 @@ sort = {
                 shows = shows.sort(function (obj1, obj2) {
                     return obj2[condition] - obj1[condition]
                 });
-                deleteRows();
-                createTable(shows, Start, End);
+                mainpage.deleteRows();
+                mainpage.createTable(shows, Start, End);
                 break;
 
 
@@ -30,8 +30,8 @@ sort = {
                 shows = shows.sort(function (obj1, obj2) {
                     return obj2[condition] < obj1[condition]
                 });
-                deleteRows();
-                createTable(shows, Start, End);
+                mainpage.deleteRows();
+                mainpage.createTable(shows, Start, End);
                 break;
 
 
@@ -39,9 +39,9 @@ sort = {
                 shows = shows.sort(function (obj1, obj2) {
                     return obj2[condition] > obj1[condition]
                 });
-                deleteRows();
-                createTable(shows, Start, End);
-
+                mainpage.deleteRows();
+                mainpage.createTable(shows, Start, End);
+                break;
 
 
         }
