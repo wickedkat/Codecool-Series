@@ -178,6 +178,7 @@ def get_all_actors(cursor):
             from actors
             JOIN show_characters sc on actors.id = sc.actor_id
             GROUP BY actors.id
+            ORDER BY name ASC
             LIMIT 20
             
             """)
