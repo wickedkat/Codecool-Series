@@ -19,3 +19,11 @@ def check_id_exists_in_database(cursor, showId):
                    {'showId':showId})
     show = cursor.fetchone()
     return show
+
+@database_connection.connection_handler
+def get_all_genres(cursor):
+    cursor.execute("""
+            SELECT * from genres """),
+
+    genres = cursor.fetchall()
+    return genres
