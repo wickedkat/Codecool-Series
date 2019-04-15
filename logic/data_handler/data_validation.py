@@ -31,3 +31,7 @@ def check_datatype_integer(data):
         raise InvalidFormat
 
 
+def validate_genres_list():
+    genres_db = database_shows.get_all_genres()
+    genres = check_empty_list(genres_db)
+    return genres
