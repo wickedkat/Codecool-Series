@@ -116,17 +116,28 @@ def get_episodes_by_show_and_season(cursor, season_id):
 
 
 @database_connection.connection_handler
-def get_show_title_by_id(cursor, showId):
+def get_show_by_id(cursor, showId):
     cursor.execute("""
-            SELECT title,
-             shows.id,
-             array_agg(DISTINCT genres.name) as genre
-             from shows
-             LEFT JOIN show_genres on shows.id = show_genres.show_id
+            SELECT
+            shows.title,
+            to_char(year, 'YYYY') as year,
+            to_char(runtime, '99') as runtime,
+            to_char(rating, '9.99999') as rating,
+            trailer,
+            homepage,
+            shows.overview,
+            array_agg(DISTINCT genres.name) as genre,
+            array_agg(DISTINCT seasons.title) as seasons,
+            to_char(shows.id, '999999') as id
+            from shows
+            LEFT JOIN show_genres on shows.id = show_genres.show_id
             LEFT JOIN genres on show_genres.genre_id = genres.id
+            LEFT JOIN seasons on shows.id = seasons.show_id
             WHERE shows.id = %(showId)s
+            GROUP BY shows.title, shows.year, shows.runtime,
+            shows.rating, shows.trailer, shows.homepage, shows.id
             """,
                    {'showId': showId})
 
-    title = cursor.fetchone()
-    return title
+    show = cursor.fetchone()
+    return show
