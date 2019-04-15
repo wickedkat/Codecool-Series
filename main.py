@@ -12,9 +12,11 @@ app.secret_key="Don'tlooseurhead"
 @app.route('/')
 def index():
     try:
+        shows = database_shows.get_just_shows()
         genres = data_validation.validate_genres_list()
         return render_template('mainpage.html',
-                               genres=genres)
+                               genres=genres,
+                               shows = shows)
     except data_validation.InvalidData:
         return render_template('mainpage_no_genres.html')
 
