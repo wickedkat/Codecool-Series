@@ -54,6 +54,14 @@ mainpage = {
         return tableBody
     },
 
+    createTrailerIcon: function createTrailerIcon(trailer) {
+        return '<a href="' + trailer + '" target="_blank"><img src="/static/assets/video-player.png" height="14px" width="14px" align="center" ></a>'
+    },
+
+    createHomepageIcon: function createHomepageIcon(homepage) {
+        return '<a href="' + homepage + '" target="_blank"><img src="/static/assets/house.png" height="14px" width="14px" align="center" ></a>'
+    },
+
 };
 
 
