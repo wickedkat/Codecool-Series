@@ -59,63 +59,65 @@
 
     <section>
         <nav class="breadcrumb">
-            <a href="/main">List of all shows</a>
+            <a href="/">List of all shows</a>
             <span class="separator">&gt;</span>
-            <a href="/{{ show}}">{{ title}}</a>
-            <span class="separator">&gt;</span>
-            <a href="/{{ show}}/seasons">seasons</a>
-        </nav>
-        <h1 class="title text-center">Show details</h1>
-        <div class="card detailed-view">
-            <div class="row">
-                {% if show.trailer %}
-                <iframe height="225" src="{{ show.trailer }}" style="float: left; margin-right: 20px"></iframe>
-                <div class="col col-twothird" style="float: left">
-                    {% else %}
-                    <iframe height="225" src="/static/assets/youtube_sorry.jpg"
-                            style="float: left; margin-right: 20px"></iframe>
-                    <div class="col col-twothird" style="float: left">
-                        {% endif %}
+            <a href="/{{ show.id}}">{{ show.title}}</a>
 
-                        <h2>{{ show.title }}</h2>
-                        <p class="small grayed">{{ show.runtime }} min <span class="separator">|</span> {{ show.genres }} <span
-                                class="separator">|</span> {{ show.year }}</p>
-                        <p>{{ show.overview }}</p>
+        </nav>
+        <h1 class="title text-center">Show details: {{show.title}}</h1>
+
+        <div class="card">
+            <div class="card detailed-view">
+                <div class="row">
+                    {% if show.trailer %}
+                    <iframe height="225" src="{{ show.trailer }}" style="float: left; margin-right: 20px"></iframe>
+                    <div class="col col-twothird" style="float: left">
+                        {% else %}
+                        <iframe height="225" src="/static/assets/youtube_sorry.jpg"
+                                style="float: left; margin-right: 20px"></iframe>
+                        <div class="col col-twothird" style="float: left">
+                            {% endif %}
+
+                            <h2>{{ show.title }}</h2>
+                            <p class="small grayed">{{ show.runtime }} min <span class="separator">|</span> {{ show.genre }} <span
+                                    class="separator">|</span> {{ show.year }}</p>
+                            <p>{{ show.overview }}</p>
+                        </div>
+                        <div style="float: left"></div>
                     </div>
-                    <div style="float: left"></div>
                 </div>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Season number</th>
+                        <th>Season title</th>
+                        <th>Overview</th>
+                        <th>Episodes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for season in seasons %}
+                    <tr>
+                        <td>{{ season.season_number }}</td>
+                        <td>{{ season.title }}</td>
+                        {% if season.overview %}
+                        <td>{{ season.overview }}</td>
+                        {%  else %}
+                        <td> 'No description'</td>
+                        {%  endif %}
+                        <td><button type="button" id="button {{ season.season_id }}" class="button-episodes"><a href="/{{show_id}}/{{season.id}}/episodes">{{season.episodes_count}}  episodes</a></button> </td>
+                    </tr>
+                    {%  endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <h1 class="title text-center">{{title}} seasons</h1>
-        <div class="card">
-            <table>
-                <thead>
-                <tr>
-                    <th>Season number</th>
-                    <th>Season title</th>
-                    <th>Overview</th>
-                    <th>Episodes</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for season in seasons %}
-                <tr>
-                    <td>{{ season.season_number }}</td>
-                    <td>{{ season.title }}</td>
-                    {% if season.overview %}
-                    <td>{{ season.overview }}</td>
-                    {%  else %}
-                    <td> 'No description'</td>
-                    {%  endif %}
-                    <td><button type="button" id="button {{ season.season_id }}" class="button-episodes"><a href="/season/episodes">{{season.episodes_count}}  episodes</a></button> </td>
-                </tr>
-                {%  endfor %}
-                </tbody>
-            </table>
-        </div>
+
+
     </section>
-    </div>
 
         <footer>
             You want a revolution, I want a revelation. <img src="/static/assets/Katslair_logo.png" height="10px" width="10px">
