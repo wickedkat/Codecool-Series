@@ -186,5 +186,22 @@ def get_all_actors(cursor):
     actors = cursor.fetchall()
     return actors
 
+@database_connection.connection_handler
+def get_shows_and_characters_by_actor_id(cursor, actorId):
+    cursor.execute("""
+            SELECT
+            character_name,
+            shows.title,
+            shows.overview,
+            shows.id
+            from shows
+            RIGHT JOIN  show_characters s on shows.id = s.show_id
+            JOIN actors a on s.actor_id = a.id
+            WHERE actor_id = %(actorId)s
+            """,
+                   {'actorId': actorId})
+
+    characters = cursor.fetchall()
+    return characters
 
 
