@@ -92,6 +92,19 @@ def display_actors():
     except data_validation.InvalidData:
         return render_template('error_url.html')
 
+@app.route('/actors/<actor_id>')
+def get_actor_roles(actor_id):
+    try:
+        data_validation.check_datatype_integer(actor_id)
+        actor = data_validation.validate_actor(actor_id)
+        return json.dumps(actor)
+
+    except data_validation.InvalidFormat:
+        return render_template('error_url.html')
+    except data_validation.InvalidData:
+        return render_template('error_url.html')
+
+
 
 
 

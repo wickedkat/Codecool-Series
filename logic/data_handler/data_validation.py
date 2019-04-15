@@ -73,3 +73,8 @@ def validate_actors_list():
     actors_db = database_shows.get_all_actors()
     actors = check_empty_list(actors_db)
     return actors
+
+def validate_actor(actorId):
+    actor_db = database_shows.get_shows_and_characters_by_actor_id(actorId)
+    actor = check_empty_list(actor_db)
+    return actor
