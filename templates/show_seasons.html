@@ -65,6 +65,28 @@
             <span class="separator">&gt;</span>
             <a href="/{{ show}}/seasons">seasons</a>
         </nav>
+        <h1 class="title text-center">Show details</h1>
+        <div class="card detailed-view">
+            <div class="row">
+                {% if show.trailer %}
+                <iframe height="225" src="{{ show.trailer }}" style="float: left; margin-right: 20px"></iframe>
+                <div class="col col-twothird" style="float: left">
+                    {% else %}
+                    <iframe height="225" src="/static/assets/youtube_sorry.jpg"
+                            style="float: left; margin-right: 20px"></iframe>
+                    <div class="col col-twothird" style="float: left">
+                        {% endif %}
+
+                        <h2>{{ show.title }}</h2>
+                        <p class="small grayed">{{ show.runtime }} min <span class="separator">|</span> {{ show.genres }} <span
+                                class="separator">|</span> {{ show.year }}</p>
+                        <p>{{ show.overview }}</p>
+                    </div>
+                    <div style="float: left"></div>
+                </div>
+            </div>
+        </div>
+
         <h1 class="title text-center">{{title}} seasons</h1>
         <div class="card">
             <table>
