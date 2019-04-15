@@ -177,6 +177,7 @@ def get_all_actors(cursor):
             string_agg(DISTINCT sc.character_name, ', ') as roles
             from actors
             JOIN show_characters sc on actors.id = sc.actor_id
+            GROUP BY actors.id
             LIMIT 20
             
             """)
