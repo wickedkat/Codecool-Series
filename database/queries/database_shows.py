@@ -72,4 +72,26 @@ def get_all_shows(cursor):
     shows = cursor.fetchall()
     return shows
 
+@database_connection.connection_handler
+def get_seasons_by_show(cursor, showId):
+    cursor.execute("""
+            SELECT shows.id  as show_id,
+            seasons.id as season_id,
+            to_char(season_number, '99') as season_number,
+            seasons.title,
+            seasons.overview,
+            COUNT(DISTINCT episode_number) as episodes_count
+            FROM shows
+            LEFT JOIN seasons on shows.id = seasons.show_id
+            JOIN episodes e on seasons.id = e.season_id
+            WHERE shows.id = %(showId)s
+            GROUP BY  shows.id, shows.title, seasons.id, seasons.season_number,
+            seasons.title, seasons.overview
+        
+            """,
+                   {'showId': showId}),
+
+    seasons = cursor.fetchall()
+    return seasons
+
 
