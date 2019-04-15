@@ -12,11 +12,9 @@ app.secret_key="Don'tlooseurhead"
 @app.route('/')
 def index():
     try:
-        shows = database_shows.get_just_shows()
         genres = data_validation.validate_genres_list()
         return render_template('mainpage.html',
-                               genres=genres,
-                               shows = shows)
+                               genres=genres)
     except data_validation.InvalidData:
         return render_template('mainpage_no_genres.html')
 
@@ -42,6 +40,21 @@ def show_mainpage():
         return json_shows
     except data_validation.InvalidData:
         return render_template('error_url.html')
+
+
+@app.route('/shows/<show_id>/seasons')
+def display_show_seasons(show_id):
+    try:
+        data_validation.check_datatype_integer(show_id)
+        seasons = data_validation.validate_seasons()
+        return render_template('show_seasons.html',
+                               seasons = seasons)
+    except data_validation.InvalidFormat:
+        return render_template('error_url.html')
+    except data_validation.InvalidData:
+        return render_template('error_url.html')
+
+
 
 
 @app.route('/design')
