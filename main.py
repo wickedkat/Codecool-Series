@@ -21,6 +21,19 @@ def index():
         return render_template('mainpage_no_genres.html')
 
 
+@app.route('/shows_by_genre', methods=['POST'])
+def get_shows_by_genre():
+    genre = request.form.get('genre')
+    try:
+        shows = data_validation.validate_shows_by_genres_list(genre)
+        return render_template('shows_by_genre.html',
+                               shows=shows,
+                               genre=genre)
+    except data_validation.InvalidData:
+        return render_template('shows_by_genre.html',
+                               genre=genre)
+
+
 @app.route('/design')
 def design():
     return render_template('design.html')
