@@ -166,4 +166,21 @@ def get_show_by_season_id(cursor, seasonID):
     return show
 
 
+@database_connection.connection_handler
+def get_all_actors(cursor):
+    cursor.execute("""
+            SELECT id,
+            name,
+            COALESCE(to_char(birthday, 'DD/MM/YYYY'), 'no data') as birthday,
+            COALESCE(to_char(death, 'DD/MM/YYYY'), 'alive') as death,
+            biography
+            from actors
+            LIMIT 20
+            
+            """)
+
+    actors = cursor.fetchall()
+    return actors
+
+
 

@@ -38,3 +38,8 @@
     margin-top: 20px;
     text-align: center;
 }
+
+#menu {
+    border: solid 3px crimson;
+    border-radius: 12px;
+}
