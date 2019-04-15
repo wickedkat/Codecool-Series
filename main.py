@@ -72,6 +72,17 @@ def display_episodes_by_season(season_id):
         return render_template('error_url.html')
 
 
+@app.route('/<season_id>/episodes/<episode_id>')
+def display_episode_details(season_id, episode_id):
+    try:
+        data_validation.check_datatype_integer(season_id)
+        data_validation.check_datatype_integer(episode_id)
+        return render_template('blank.html')
+
+    except data_validation.InvalidFormat:
+        return render_template('error_url.html')
+
+
 
 
 @app.route('/design')
