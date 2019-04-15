@@ -34,8 +34,8 @@ mainpage = {
         } else {
             Start -= 15;
             End -= 15;
-            deleteRows();
-            createTable(shows, Start, End)
+            dom.deleteRows(tableBody);
+            mainpage.createTable(shows, Start, End)
         }
     },
 
@@ -45,8 +45,8 @@ mainpage = {
         } else {
             Start += 15;
             End += 15;
-            deleteRows();
-            createTable(shows, Start, End)
+            dom.deleteRows(tableBody);
+            mainpage.createTable(shows, Start, End)
         }
     },
 
