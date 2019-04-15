@@ -40,6 +40,7 @@
 
     <!--scripts-->
     <script src="{{ url_for('static', filename='scripts/dom.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/actors.js') }}" defer></script>
 
 
 
@@ -89,7 +90,7 @@
                 <tbody>
                 {% for actor in actors %}
                     <tr>
-                        <td><a style="cursor:pointer" onclick="dom.showRolesModal()">{{ actor.name }}</a></td>
+                        <td><a style="cursor:pointer" onclick="actors.getActorsDetails('{{actor.id}}')">{{ actor.name }}</a></td>
                         <td>{{ actor.birthday }}</td>
                         <td>{{ actor.death }}</td>
                         {% if actor.biography %}
