@@ -35,3 +35,8 @@ def validate_genres_list():
     genres_db = database_shows.get_all_genres()
     genres = check_empty_list(genres_db)
     return genres
+
+def validate_shows_by_genres_list(genre):
+    shows_by_genres_db = database_shows.get_shows_by_genre(genre)
+    shows_by_genres = check_empty_list(shows_by_genres_db)
+    return shows_by_genres
