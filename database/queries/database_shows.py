@@ -153,7 +153,8 @@ def get_show_by_season_id(cursor, seasonID):
     cursor.execute("""
             SELECT shows.id,
             shows.title,
-            s.id as season_id
+            s.id as season_id,
+            s.title as season_title
             from shows   
             JOIN seasons s on shows.id = s.show_id
             WHERE s.id = %(seasonID)s
