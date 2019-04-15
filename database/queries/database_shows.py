@@ -106,7 +106,8 @@ def get_episodes_by_show_and_season(cursor, season_id):
                 to_char(episode_number, '999') as episode_number,
                 episodes.title as episode_title,
                 episodes.overview as episode_overview,
-                shows.title as show_title
+                shows.title as show_title,
+                shows.id as show_id
                 FROM episodes
                 LEFT JOIN seasons  on episodes.season_id = seasons.id
                 JOIN shows  on seasons.show_id = shows.id
