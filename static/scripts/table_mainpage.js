@@ -17,7 +17,7 @@ mainpage = {
             shows = JSON.parse(dataRequest.response);
             tableBody = document.getElementById("shows_mainpage");
             if (tableBody.hasChildNodes()) {
-                this.deleteRows()
+                dom.deleteRows(tableBody)
             }
             this.createTable(shows, 0, 15);
             Start = 0;
