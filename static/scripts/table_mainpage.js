@@ -79,6 +79,15 @@ mainpage = {
         }
     },
 
+    seasonsHandler: function seasonsHandler(seasons, show) {
+
+        if (seasons.length === 0) {
+            return 'No seasons'
+        } else {
+            return '<button type="button" id="button'+show.id+'" data-seasons ="' + show.seasons_titles + '" data-title="'+show.title+'">' + seasons.length + ' seasons</button>';
+        }
+    },
+
 };
 
 
