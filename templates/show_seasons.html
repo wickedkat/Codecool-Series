@@ -107,7 +107,7 @@
                         {%  else %}
                         <td> 'No description'</td>
                         {%  endif %}
-                        <td><button type="button" id="button {{ season.season_id }}" class="button-episodes"><a href="/{{show_id}}/{{season.id}}/episodes">{{season.episodes_count}}  episodes</a></button> </td>
+                        <td><button type="button" id="button {{ season.season_id }}" class="button-episodes"><a href="/{{season.season_id}}/episodes">{{season.episodes_count}}  episodes</a></button> </td>
                     </tr>
                     {%  endfor %}
                     </tbody>

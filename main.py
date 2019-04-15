@@ -42,13 +42,28 @@ def show_mainpage():
         return render_template('error_url.html')
 
 
-@app.route('/shows/<show_id>/seasons')
+@app.route('/<show_id>')
 def display_show_seasons(show_id):
     try:
         data_validation.check_datatype_integer(show_id)
-        seasons = data_validation.validate_seasons()
+        seasons = data_validation.validate_seasons(show_id)
+        show = data_validation.validate_show_by_id(show_id)
         return render_template('show_seasons.html',
-                               seasons = seasons)
+                               seasons = seasons,
+                               show = show)
+    except data_validation.InvalidFormat:
+        return render_template('error_url.html')
+    except data_validation.InvalidData:
+        return render_template('error_url.html')
+
+
+@app.route('/<season_id>/episodes')
+def display_episodes_by_season(season_id):
+    try:
+        data_validation.check_datatype_integer(season_id)
+        episodes = data_validation.validate_episodes(season_id)
+        return render_template('episodes.html',
+                               episodes = episodes)
     except data_validation.InvalidFormat:
         return render_template('error_url.html')
     except data_validation.InvalidData:
