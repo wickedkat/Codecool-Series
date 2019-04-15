@@ -47,6 +47,7 @@ def get_shows_by_genre(cursor, genre):
     shows = cursor.fetchall()
     return shows
 
+
 @database_connection.connection_handler
 def get_all_shows(cursor):
     cursor.execute("""
@@ -71,6 +72,7 @@ def get_all_shows(cursor):
             """),
     shows = cursor.fetchall()
     return shows
+
 
 @database_connection.connection_handler
 def get_seasons_by_show(cursor, showId):
@@ -103,7 +105,8 @@ def get_episodes_by_show_and_season(cursor, season_id):
                 episodes.id as episode_id,
                 to_char(episode_number, '999') as episode_number,
                 episodes.title as episode_title,
-                episodes.overview as episode_overview
+                episodes.overview as episode_overview,
+                shows.title as show_title
                 FROM episodes
                 LEFT JOIN seasons  on episodes.season_id = seasons.id
                 JOIN shows  on seasons.show_id = shows.id
