@@ -25,7 +25,14 @@ mainpage = {
 
         };
         dataRequest.send();
-    }
+    },
+
+    createTable: function createTable(shows, start, end) {
+        for (i = start; i < end; i++) {
+            show = shows[i];
+            this.createRow(show)
+        }
+    },
 
 
 };
