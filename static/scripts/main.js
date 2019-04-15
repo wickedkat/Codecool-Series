@@ -1,1 +1,0 @@
-window.onload = mainpage.getDataMainPage(0,15);
