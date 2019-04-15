@@ -19,7 +19,7 @@ mainpage = {
             if (tableBody.hasChildNodes()) {
                 dom.deleteRows(tableBody)
             }
-            this.createTable(shows, 0, 15);
+            mainpage.createTable(shows, 0, 15);
             Start = 0;
             End = 15
 
@@ -30,22 +30,22 @@ mainpage = {
     createTable: function createTable(shows, start, end) {
         for (i = start; i < end; i++) {
             show = shows[i];
-            this.createRow(show)
+            mainpage.createRow(show)
         }
     },
     createRow: function createRow(show) {
         let row = document.createElement('tr');
         tableBody.appendChild(row);
-        row.innerHTML = '<td>' + this.addLinkToShowTitle(show.id, show.title) + '</td>' +
+        row.innerHTML = '<td>' + mainpage.addLinkToShowTitle(show.id, show.title) + '</td>' +
             '<td>' + show.year + '</td>' +
             '<td>' + show.runtime + '</td>' +
-            '<td>' + this.limitGenres(show.genre) + '</td>' +
+            '<td>' + mainpage.limitGenres(show.genre) + '</td>' +
             '<td>' + show.rating + '</td>' +
-            '<td>' + this.createTrailerIcon(show.trailer) + '</td>' +
-            '<td>' + this.createHomepageIcon(show.homepage) + '</td>' +
-            '<td>' + this.seasonsHandler(show.seasons_titles, show) + '</td>' +
+            '<td>' + mainpage.createTrailerIcon(show.trailer) + '</td>' +
+            '<td>' + mainpage.createHomepageIcon(show.homepage) + '</td>' +
+            '<td>' + mainpage.seasonsHandler(show.seasons_titles, show) + '</td>' +
             '<td class="action-column"><button type="button" class="icon-button"><i class="fa fa-edit fa-fw"></i></button><button type="button" class="icon-button"><i class="fa fa-trash fa-fw"></i></button></td>'
-        this.createSeasonsModalUnderButton(show)
+        /*mainpage.createSeasonsModalUnderButton(show)*/
 
     },
 
@@ -86,6 +86,11 @@ mainpage = {
         } else {
             return '<button type="button" id="button'+show.id+'" data-seasons ="' + show.seasons_titles + '" data-title="'+show.title+'">' + seasons.length + ' seasons</button>';
         }
+    },
+
+    addLinkToShowTitle: function addLinkToShowTitle( id, title) {
+        return '<a href="/'+id+'">'+title+' </a>'
+
     },
 
 };
