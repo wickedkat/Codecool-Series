@@ -116,6 +116,36 @@ mainpage = {
 
     },
 
+    createSeasonsModalUnderButton: function createSeasonsModalUnderButton(show ){
+        let showSeasons = document.getElementById("button"+show.id).dataset.seasons;
+        let showTitle = document.getElementById("button"+show.id).dataset.title;
+        document.getElementById("button"+show.id).addEventListener("click", function() {
+                let tableBodySeasons = document.getElementById('table-seasons');
+                tableBodySeasons.innerHTML='';
+                mainpage.createHeaderSeasonsModal(showTitle);
+                mainpage.createTableSeasonsModal(showSeasons, tableBodySeasons);
+                dom.showSeasonsModal()
+
+            }
+
+        )
+    },
+
+    createHeaderSeasonsModal: function createHeaderSeasonsModal (showTitle) {
+        let header = document.getElementById('seasons-header');
+        header.innerText = showTitle + ' seasons';
+    },
+
+    createTableSeasonsModal: function createTableSeasonsModal(showSeasons, tableBodySeasons) {
+        let Seasons = showSeasons.split(',');
+        for (let season of Seasons) {
+            let row = document.createElement('tr');
+            row.innerHTML = '<td>' + season + '</td>';
+            tableBodySeasons.appendChild(row)
+        }
+
+    }
+
 };
 
 
