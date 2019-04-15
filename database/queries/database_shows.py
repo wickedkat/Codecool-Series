@@ -193,7 +193,8 @@ def get_shows_and_characters_by_actor_id(cursor, actorId):
             character_name,
             shows.title,
             shows.overview,
-            shows.id
+            shows.id,
+            a.name as actor_name
             from shows
             RIGHT JOIN  show_characters s on shows.id = s.show_id
             JOIN actors a on s.actor_id = a.id

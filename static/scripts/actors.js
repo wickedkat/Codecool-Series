@@ -17,18 +17,19 @@ let actors = {
         let tableBody = document.getElementById("table-roles");
         dom.deleteRows(tableBody);
         let header = document.getElementById("roles-header");
-        header.innerHTML = actor.name + '  roles';
-        for (role in actor) {
-            actor.createRowRolesModal(tableBody, role);
+        header.innerHTML = actor[0].actor_name + '  roles';
+        for (i =0; i<actor.length; i ++) {
+            debugger;
+            actors.createRowRolesModal(tableBody, actor[i]);
         }
         dom.showRolesModal()
     },
 
-    createRowRolesModal: function createRowRolesModal(tableBody, role) {
+    createRowRolesModal: function createRowRolesModal(tableBody, actor) {
             let row = document.createElement('tr');
-            row.innerHTML = '<td>' + role.character_name + '</td>' +
-                '<td>' + role.title + '</td>' +
-                '<td class="longtext">' + role.overview + '</td>';
+            row.innerHTML = '<td>' + actor.character_name + '</td>' +
+                '<td><a href="'+actor.id+'">' + actor.title + '</a></td>' +
+                '<td class="longtext">' + actor.overview + '</td>';
             tableBody.appendChild(row)
         }
 
